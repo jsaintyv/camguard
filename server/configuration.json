@@ -5,7 +5,7 @@
 	"webcams": [
 		{
 			"name": "webcam1",
-			"url": "http://webcam1.camguard.fr/tmpfs/auto.jpg",
+			"url": "http://172.0.0.10/tmpfs/auto.jpg",
 			"login": "admin",
 			"password": "admin",
 			"minDiff": 1500000,
