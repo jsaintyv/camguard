@@ -10,7 +10,8 @@ class DateUtils {
      * @returns {Date} new date
      */
     convertInputValue(v) {
-        return  new Date(v + "T00:00")
+        var dateAsArray = (""+v).split("-");
+        return  new Date(dateAsArray[0], dateAsArray[1]-1, dateAsArray[2]);
     }
 
     /**
@@ -90,7 +91,9 @@ class DateUtils {
      * @param {Date} d 
      */
     formatDateISO(d) {
-        return d.toISOString().slice(0,10);
+        var month = (d.getMonth()+1);
+        var day = d.getDate();
+        return d.getFullYear() + "-" + (month < 10 ? "0" :"") + month + "-" + (day < 10 ? "0":"") + day;
     }
 }
 

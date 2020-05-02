@@ -36,7 +36,7 @@
         }
     },
     methods: {
-        updateRange() {
+        updateRange() {            
             var startDate = DateUtils.convertInputValue(this.$refs.startDate.localValue);
             startDate.setHours(this.$refs.startHours.localValue);
             startDate.setMinutes(this.$refs.startMinutes.localValue);
@@ -44,8 +44,7 @@
             var endDate = DateUtils.convertInputValue(this.$refs.endDate.localValue);
             endDate.setHours(this.$refs.endHours.localValue);
             endDate.setMinutes(this.$refs.endMinutes.localValue);
-
-
+        
             this.$store.dispatch(ACTION_UPDATE_TIME_RANGE, {"start": startDate,  "end": endDate});    
         }
     }    
