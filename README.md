@@ -17,14 +17,14 @@ Build chain can be executed by maven.
 # To run
 From server directory , you can run with :
 
-'''
+```
 java  -jar target/server-0.0.1-SNAPSHOT.jar configuration.json
-'''
+```
 
 # Configuration
 Configuration is simple JSON. (Actually , i don't need database)
 
-'''
+```
 {
 	"login": "admin",
 	"password": "secret",
@@ -44,5 +44,5 @@ Configuration is simple JSON. (Actually , i don't need database)
 		}
 	]	
 }
-'''
+```
 
