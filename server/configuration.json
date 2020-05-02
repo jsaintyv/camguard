@@ -1,0 +1,19 @@
+{
+	"login": "admin",
+	"password": "secret",
+	"imagedir": "images",
+	"webcams": [
+		{
+			"name": "webcam1",
+			"url": "http://webcam1.camguard.fr/tmpfs/auto.jpg",
+			"login": "admin",
+			"password": "admin",
+			"minDiff": 1500000,
+			"ignoreLeftUpperX": 320,
+			"ignoreLeftUpperY": 0,
+			"ignoreRightBottomX": 640,
+			"ignoreRightBottomY": 10,
+			"purgeOlderInSeconds": 259200 		
+		}
+	]	
+}
