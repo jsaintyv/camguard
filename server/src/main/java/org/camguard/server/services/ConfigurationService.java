@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.camguard.server.models.ConfigurationCamGuard;
+import org.camguard.server.models.ConfigurationCamGuard.WebcamUrl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,6 +23,15 @@ public class ConfigurationService {
 	
 	public ConfigurationCamGuard getConfiguration() {
 		return configuration;
+	}
+	
+	public WebcamUrl getWebcamByName(String name) {
+		for (WebcamUrl webcam : configuration.webcams) {
+			if (name.equals(webcam.name)) {
+				return webcam;
+			}
+		}
+		return null;
 	}
 
 	public void loadInstance(File file) throws IOException {

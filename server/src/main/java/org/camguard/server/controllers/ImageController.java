@@ -1,6 +1,7 @@
 package org.camguard.server.controllers;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.camguard.server.models.ConfigurationCamGuard;
 import org.camguard.server.models.ConfigurationCamGuard.WebcamUrl;
+import org.camguard.server.scheduled.ScheduledCollect;
 import org.camguard.server.services.ConfigurationService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.CacheControl;
@@ -104,5 +106,22 @@ public class ImageController {
 				.contentType(MediaType.IMAGE_JPEG)
 				.cacheControl(CacheControl.maxAge(Duration.ofDays(10)))
 				.body(new InputStreamResource(new FileInputStream(fileImage)));		
+    }
+	
+	@RequestMapping(value = "/api/images/direct/{webcamName:.+}", 
+			method = RequestMethod.GET,
+            produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> retrieveDirect(@PathVariable("webcamName") String webcamName) throws IOException {			
+		WebcamUrl webcam = ConfigurationService.getInstance().getWebcamByName(webcamName);
+		if(webcam == null) {
+			return new ResponseEntity<InputStreamResource>(HttpStatus.BAD_REQUEST);
+		}
+		byte[] resultBuffer = ScheduledCollect.downloadImage(webcam);
+		        
+		return ResponseEntity
+				.ok()
+				.contentType(MediaType.IMAGE_JPEG)
+				.cacheControl(CacheControl.maxAge(Duration.ofDays(10)))
+				.body(new InputStreamResource(new ByteArrayInputStream(resultBuffer)));		
     }
 }

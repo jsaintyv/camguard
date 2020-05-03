@@ -48,27 +48,47 @@ public class ScheduledCollect {
 		}
 	}
 
-	final byte[] buffer = new byte[512 * 1024];
+	
 	public void consume(File dirImage, ConfigurationCamGuard configuration, ConfigurationCamGuard.WebcamUrl webcam) {
 
-		HttpGet httpGet = new HttpGet(webcam.url);
+		byte[] resultBuffer = downloadImage(webcam);
+		if(resultBuffer == null) {
+			return;
+		}
 
+		String lastKeepedFile = mapLastKeepedFile.get(webcam.name);
+		if (lastKeepedFile == null || ImageUtils.shouldKeep(new File(dirImage, lastKeepedFile), new ByteArrayInputStream(resultBuffer), webcam)) {
+			String fileName = webcam.name + "." + dateFormat.format(new Date()) + ".jpg";
+			try {
+				FileUtils.copyToFile(new ByteArrayInputStream(resultBuffer), new File(dirImage, fileName));
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+				return;
+			} 
+					
+			mapLastKeepedFile.put(webcam.name, fileName);
+			log.log(Level.INFO, "keeped " + fileName);
+		}
+	}
+
+	public static byte[] downloadImage(ConfigurationCamGuard.WebcamUrl webcam) {
+		final byte[] buffer = new byte[512 * 1024];
+		HttpGet httpGet = new HttpGet(webcam.url);
 		CredentialsProvider provider = new BasicCredentialsProvider();
 		provider.setCredentials(new AuthScope(httpGet.getURI().getHost(), httpGet.getURI().getPort()),
 				new UsernamePasswordCredentials(webcam.login, webcam.password));
 
-		String fileName = webcam.name + "." + dateFormat.format(new Date()) + ".jpg";
+		
 		byte[] resultBuffer = null;
 		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultCredentialsProvider(provider)
 				.build()) {
 			CloseableHttpResponse reponse = httpclient.execute(httpGet);
 			if (reponse.getStatusLine().getStatusCode() >= 400) {
 				log.log(Level.INFO, reponse.getStatusLine().getStatusCode() + " " + webcam.url);
-				return;
+				return null;
 			}
 			InputStream in = reponse.getEntity().getContent();
-			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				
+			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {				
 				int len;
 				while ((len = in.read(buffer)) > 0) {
 					baos.write(buffer, 0, len);
@@ -77,21 +97,9 @@ public class ScheduledCollect {
 			}
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
-			return;
+			return null;
 		}
-
-		String lastKeepedFile = mapLastKeepedFile.get(webcam.name);
-		if (lastKeepedFile == null || ImageUtils.shouldKeep(new File(dirImage, lastKeepedFile), new ByteArrayInputStream(resultBuffer), webcam)) {							
-			try {
-				FileUtils.copyToFile(new ByteArrayInputStream(resultBuffer), new File(dirImage, fileName));
-			} catch (Exception e) {
-				log.log(Level.SEVERE, e.getMessage(), e);
-				return;
-			} 
-			
-			mapLastKeepedFile.put(webcam.name, fileName);
-			log.log(Level.INFO, "keeped " + fileName);
-		}
+		return resultBuffer;
 	}
 	
 	public void purge(File dirImage, ConfigurationCamGuard configuration, ConfigurationCamGuard.WebcamUrl webcam) {
