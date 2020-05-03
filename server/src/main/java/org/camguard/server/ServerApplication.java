@@ -16,9 +16,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication
 @EnableScheduling
 public class ServerApplication {
+	private static String configurationJson;
 	private static final Logger LOG = LoggerFactory.getLogger(ServerApplication.class);
 
 	public static void main(String[] args) {
+		if(args.length == 0) {
+			configurationJson = "./configuration.json"; 
+		} else {
+			configurationJson = args[0];
+		}
+		
 		SpringApplication.run(ServerApplication.class, args);
 	}
 
@@ -27,7 +34,7 @@ public class ServerApplication {
 		
 		return () -> {			
 			LOG.info("### Load configuration ### ");
-			ConfigurationService.getInstance().loadInstance(new File("./configuration.json"));
+			ConfigurationService.getInstance().loadInstance(new File(configurationJson));
 		};
 	}
 
