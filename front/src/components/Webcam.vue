@@ -1,5 +1,5 @@
 <template>
-  <div id="webcam">  
+  <div id="webcam">      
     <div class="rowSnapshot">                    
       <img class="images" v-for="(fileName, i) in getImages" v-bind:key="fileName" :src="fileName" width="200" :title="fileName" @click="index = i"/>                
     </div>
