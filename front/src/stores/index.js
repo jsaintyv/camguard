@@ -7,15 +7,18 @@ Vue.use(Vuex);
 export const UPDATE_WEBCAMS = "UPDATE_WEBCAMS";
 export const UPDATE_IMAGES_LIST = "UPDATE_IMAGES_LIST";
 export const UPDATE_TIME_RANGE = "UPDATE_TIME_RANGE";
+export const UPDATE_ALERTS = "UPDATE_ALERTS";
 
 export const ACTION_LOAD_WEBCAMS = "ACTION_LOAD_WEBCAMS";
 export const ACTION_LOAD_IMAGES = "ACTION_LOAD_IMAGES";
+export const ACTION_LOAD_ALERTS = "ACTION_LOAD_ALERTS";
 export const ACTION_UPDATE_TIME_RANGE = "ACTION_UPDATE_TIME_RANGE";
 
 export default new Vuex.Store({
     state: {
         webcams: [],
         imagesByWebcamName: {},
+        alertsByWebcamName: {},
         timeRange: {
             start: new Date(Date.now()-(600 * 1000)),
             end: new Date()
@@ -32,6 +35,9 @@ export default new Vuex.Store({
         },
         [UPDATE_TIME_RANGE] (state, range) {                        
             state.timeRange = range;
+        },
+        [UPDATE_ALERTS] (state, newPatch) {                                    
+            state.alertsByWebcamName = Object.assign({}, state.alertsByWebcamName, newPatch);            
         }
     },
     actions: {        
@@ -60,7 +66,17 @@ export default new Vuex.Store({
         [ACTION_UPDATE_TIME_RANGE] (store, range) {
             store.commit(UPDATE_TIME_RANGE, range);
             store.state.webcams.forEach(webcamName => store.dispatch(ACTION_LOAD_IMAGES, webcamName));
-        }        
+        },
+        [ACTION_LOAD_ALERTS] (store, webcamName) {
+            console.log(ACTION_LOAD_ALERTS);
+            WebcamService.listAlerts(webcamName)
+            .done(list => {
+                console.log("loading images list", list);
+                var patch = {};                
+                patch[webcamName] = list;
+                store.commit(UPDATE_ALERTS, patch);
+            });            
+        }
     }
 
 });

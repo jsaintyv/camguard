@@ -15,6 +15,9 @@
                   <b-tab title="Historique">
                     <Webcam v-bind:webcamName="webcamName" />  
                   </b-tab>
+                  <b-tab title="Alerts">
+                    <AlertsWebcam v-bind:webcamName="webcamName" />  
+                  </b-tab>
                 </b-tabs>            
               </b-card>
             </div>
@@ -25,6 +28,7 @@
 <script>
   import {ACTION_LOAD_WEBCAMS} from '../stores/index'
   import Webcam from './Webcam'
+  import AlertsWebcam from './AlertsWebcam'
   import TimeRange from './TimeRange'
 
   export default {
@@ -49,7 +53,8 @@
     },
     components: {
       Webcam,
-      TimeRange
+      TimeRange,
+      AlertsWebcam
     } 
   }
 </script>

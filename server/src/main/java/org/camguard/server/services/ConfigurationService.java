@@ -38,7 +38,10 @@ public class ConfigurationService {
 		configuration = loadConfiguration(file);
 	}
 
-	static ConfigurationCamGuard loadConfiguration(File file) throws IOException {
+	private ConfigurationCamGuard loadConfiguration(File file) throws IOException {
+		if(! file.exists()) {
+			throw new RuntimeException("Configuration not found :" + file.getAbsolutePath());
+		}
 		try(FileInputStream fin = new FileInputStream(file)) {
 			return loadConfiguration(fin);
 		}		

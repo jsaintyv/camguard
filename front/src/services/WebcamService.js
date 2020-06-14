@@ -6,5 +6,8 @@ export default {
     },
     listImages(webcamName, start, end) {
         return QueryUtils.get("/api/images/list/" + webcamName, {start: start, end: end});
+    },
+    listAlerts(webcamName) {
+        return QueryUtils.get("/api/alert/list/" + webcamName);
     }    
 };

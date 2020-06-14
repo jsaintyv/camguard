@@ -2,10 +2,17 @@
 	"login": "admin",
 	"password": "secret",
 	"imagedir": "images",
+	"smtpServer": "smtp.example.com",
+	"smtpPort": 587,
+	"smtpTls": true,
+	"smtpLogin": "sender@gmail.com",
+	"smtpPassword": "secret", 
+	"senderEmail": "sender@gmail.com",
+	"alertEmails": ["sender@gmail.com"],	
 	"webcams": [
 		{
 			"name": "webcam1",
-			"url": "http://172.0.0.10/tmpfs/auto.jpg",
+			"url": "http://localhost:8080/sample.jpg",
 			"login": "admin",
 			"password": "admin",
 			"minDiff": 1500000,
