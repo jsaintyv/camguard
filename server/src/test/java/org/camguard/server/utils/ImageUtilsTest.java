@@ -66,7 +66,7 @@ public class ImageUtilsTest {
 	}
 
 	@Test
-	public void testAlert() throws IOException {		
+	public void testNoAlert() throws IOException {		
 		BufferedImage src = ImageIO.read(getClass().getResourceAsStream("sample.jpg"));
 		BufferedImage ref = ImageIO.read(getClass().getResourceAsStream("sample2.jpg"));
 
@@ -75,12 +75,34 @@ public class ImageUtilsTest {
 		webcamConfig.ignoreLeftUpperY = 0;
 		webcamConfig.ignoreRightBottomX = 640;
 		webcamConfig.ignoreRightBottomY = 10;
+		webcamConfig.minAlert = 500000;
 
 		Assertions.assertFalse(ImageUtils.shouldAlert(src, ref, webcamConfig));
 
 	}
+	
+	
+	@Test
+	public void testShouldAlert() throws IOException {		
+		BufferedImage src = ImageIO.read(getClass().getResourceAsStream("shouldAlert1.jpg"));
+		BufferedImage ref = ImageIO.read(getClass().getResourceAsStream("shouldAlert2.jpg"));
 
+		ConfigurationCamGuard.WebcamUrl webcamConfig = new ConfigurationCamGuard.WebcamUrl();
+		webcamConfig.ignoreLeftUpperX = 320;
+		webcamConfig.ignoreLeftUpperY = 0;
+		webcamConfig.ignoreRightBottomX = 640;
+		webcamConfig.ignoreRightBottomY = 10;
+		webcamConfig.minAlert = 500000;
+		
+		
+		Assertions.assertTrue(ImageUtils.shouldAlert(src, ref, webcamConfig));
 
+	}
 
+	/*
+	public static void main(String[] args) throws IOException {
+		new ImageUtilsTest().testShouldAlert();
+	}
+	*/
 
 }

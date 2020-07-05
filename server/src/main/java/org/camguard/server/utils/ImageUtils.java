@@ -77,6 +77,11 @@ public class ImageUtils {
 		src.applyGaussianFilter(15);
 		dst.applyGaussianFilter(15);		
 		dst.substractAbs(src);
+		dst.saturate(100);
+		
+		//DEBUG show(dst, true);
+		
+		
 			
 		double sum = 0;
 		for (int x = 1; x < src.getWidth(); x++) {
@@ -85,7 +90,7 @@ public class ImageUtils {
 						&& y <= ignoreRightBottomY)
 					continue;
 
-				sum += dst.getGrey(x, y);
+				sum += dst.getGrey(x, y) > 10  ? 255 : 0;
 			}
 		}
 
@@ -177,6 +182,20 @@ public class ImageUtils {
 	
 	public static void show(GreyImage dst) {
 		show(dst.toBufferedImage());
+	}
+	
+	public static void show(GreyImage dst, boolean wait) {
+		show(dst);
+		
+		if(wait) {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		}
 	}
 	
 	public static void show(BufferedImage dst) {					
