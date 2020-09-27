@@ -58,7 +58,7 @@ public class ImageUtils {
 			return false;
 		}
 
-		int levelScore = webcamConfiguration.minAlert == null ? 1500000 : webcamConfiguration.minAlert;
+		int levelScore = webcamConfiguration.minAlert == null ? 500000 : webcamConfiguration.minAlert;
 		int ignoreLeftUpperX = -1;
 		int ignoreLeftUpperY = -1;
 		int ignoreRightBottomX = -1;
@@ -94,9 +94,9 @@ public class ImageUtils {
 			}
 		}
 
-		if (sum > levelScore) {
-			log.log(Level.INFO, "Diff sum " + sum);
-		}
+		
+			log.log(Level.INFO, "Diff alert " + sum);
+		
 		return sum > levelScore;
 	}
 

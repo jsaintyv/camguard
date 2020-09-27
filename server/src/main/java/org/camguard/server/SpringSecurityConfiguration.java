@@ -46,7 +46,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http        		
             .requestCache()                	
             .and()
-            .authorizeRequests()
+            .authorizeRequests()            
             .antMatchers(HttpMethod.GET, "/api/**").hasAuthority(ROLE_ADMIN)
             .antMatchers(HttpMethod.POST, "/api/**").hasAuthority(ROLE_ADMIN)                
             .and()

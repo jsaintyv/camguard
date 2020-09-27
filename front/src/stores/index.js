@@ -38,6 +38,7 @@ export default new Vuex.Store({
         },
         [UPDATE_ALERTS] (state, newPatch) {                                    
             state.alertsByWebcamName = Object.assign({}, state.alertsByWebcamName, newPatch);            
+            console.log(state.alertsByWebcamName);
         }
     },
     actions: {        
@@ -71,6 +72,7 @@ export default new Vuex.Store({
             console.log(ACTION_LOAD_ALERTS);
             WebcamService.listAlerts(webcamName)
             .done(list => {
+                list.forEach((a)=>a.imageUrl = "/api/images/retrieve/" + a.filename)
                 console.log("loading images list", list);
                 var patch = {};                
                 patch[webcamName] = list;

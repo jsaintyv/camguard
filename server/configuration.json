@@ -12,7 +12,7 @@
 	"webcams": [
 		{
 			"name": "webcam1",
-			"url": "http://localhost:8080/sample.jpg",
+			"url": "http://localhost:8080/test/camera",
 			"login": "admin",
 			"password": "admin",
 			"minDiff": 1500000,

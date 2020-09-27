@@ -2,11 +2,13 @@ package org.camguard.server.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.camguard.server.models.AlertEntry;
 
 public class AlertService {
+	private static final Logger log = Logger.getLogger(AlertService.class.getName());
 	private static final AlertService INSTANCE  = new AlertService();
 	private AlertService() {		
 	}
@@ -24,6 +26,9 @@ public class AlertService {
 		AlertEntry alert = new AlertEntry();
 		alert.setFilename(filename);
 		alert.setTime(System.currentTimeMillis());
+		alert.setWebcam(webcam);
+		alerts.add(alert);
+		log.warning("New alert " + webcam + " " + filename);
 	}
 	
 	public int countLastDay(String webcam) {

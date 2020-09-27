@@ -75,8 +75,8 @@ public class ScheduledCollect {
 			String fileName = webcam.name + "." + dateFormat.format(new Date()) + ".jpg";	
 			FileUtils.copyToFile(new ByteArrayInputStream(resultBuffer), new File(dirImage, fileName));
 					
-			if(previousImage != null && webcam.alertEmail && ImageUtils.shouldAlert(previousImage, newImage, webcam)) {
-				if(AlertService.instance().countLastDay(webcam.name) < 20) {
+			if(previousImage != null && ImageUtils.shouldAlert(previousImage, newImage, webcam)) {
+				if(Boolean.TRUE.equals(webcam.alertEmail) && AlertService.instance().countLastDay(webcam.name) < 20) {
 					// Avoid to send too mail for webcam.
 					MailService.sendAlert(new File(fileName));									
 				}

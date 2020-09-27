@@ -4,18 +4,13 @@ package org.camguard.server.controllers;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 
 import org.camguard.server.models.ConfigurationCamGuard;
 import org.camguard.server.models.ConfigurationCamGuard.WebcamUrl;
@@ -26,7 +21,6 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,10 +29,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ImageController {
-	private static final Logger log = Logger.getLogger(ImageController.class.getName());
+public class ImageController {		
+	private Random randomSimulationCam = new Random(System.currentTimeMillis());
 	
-	private static long SHOW_MAX_HISTORY = 7l*24*3600*1000;
+	private static final String[] simulationNoAlertSet = new String[] {
+		"sim1.jpg",
+		"sim2.jpg",
+	};
+	
+	private static final String[] simulationShouldAlertSet = new String[] {
+		"sim3.jpg",			
+	};
 	
 	public ImageController() {		
 	}
@@ -123,5 +124,31 @@ public class ImageController {
 				.contentType(MediaType.IMAGE_JPEG)
 				.cacheControl(CacheControl.maxAge(Duration.ofDays(10)))
 				.body(new InputStreamResource(new ByteArrayInputStream(resultBuffer)));		
+    }
+	
+	
+	
+	/**
+	 * Simulate camera for localtest
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/test/camera", 
+			method = RequestMethod.GET,
+            produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> testCamera() throws IOException {			
+		String ressourcePath = "/org/camguard/server/controllers/res/";
+		long t = randomSimulationCam.nextInt(100);
+		if(t < 80) {
+			ressourcePath += simulationNoAlertSet[randomSimulationCam.nextInt(simulationNoAlertSet.length)];
+		} else {
+			ressourcePath += simulationShouldAlertSet[randomSimulationCam.nextInt(simulationShouldAlertSet.length)];
+		}
+					        
+		return ResponseEntity
+				.ok()
+				.contentType(MediaType.IMAGE_JPEG)
+				.cacheControl(CacheControl.maxAge(Duration.ofDays(10)))
+				.body(new InputStreamResource(this.getClass().getResourceAsStream(ressourcePath)));		
     }
 }

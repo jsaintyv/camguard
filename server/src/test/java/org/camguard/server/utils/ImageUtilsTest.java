@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang3.StringUtils;
 import org.camguard.server.models.ConfigurationCamGuard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -51,18 +50,17 @@ public class ImageUtilsTest {
 		double[] matrix = ImageUtils.buildGaussianConvolutionMatrix(size);
 		
 		
-		double sum = 0;
 		for (int y = 0; y < size; y++) {
-			for (int x = 0; x < size; x++) {
-				sum +=matrix[x+y*size];
+			for (int x = 0; x < size; x++) {		
 				double rounded = matrix[x+y*size];
 				
 				rounded = Math.round(rounded*10e5)/10e5;
-				System.out.print(StringUtils.leftPad(""+rounded, 12, " ") + ",");
+				//System.out.print(StringUtils.leftPad(""+rounded, 12, " ") + ",");
 				assertEquals(rounded, ref[x+y*size]);
 			}
-			System.out.println();
-		}		
+			//System.out.println();
+		}	
+		
 	}
 
 	@Test
@@ -98,11 +96,4 @@ public class ImageUtilsTest {
 		Assertions.assertTrue(ImageUtils.shouldAlert(src, ref, webcamConfig));
 
 	}
-
-	/*
-	public static void main(String[] args) throws IOException {
-		new ImageUtilsTest().testShouldAlert();
-	}
-	*/
-
 }
